@@ -7,15 +7,20 @@ class SlotMachine {
 private:
     std::vector<std::string> symbols; 
     int credits;
+    bool isBonusSpin;
 
 
 public:
-    SlotMachine() : credits(1000) {
+    SlotMachine() : credits(1000), isBonusSpin(false) {
         symbols = { "Cherry", "Bell", "Lemon", "Orange", "Star", "Skull" };
     }
 
     void spin(int bet) {
-        if (bet > credits) {
+        if (isBonusSpin) {
+            std::cout << "Bonus Spin!" << std::endl;
+            bet = 0;
+            isBonusSpin = false;
+        } else if (bet > credits) {
             std::cout << "Not enough credits." << std::endl;
             return;
         }
@@ -27,6 +32,10 @@ public:
 
         std::cout << reel1 << " - " << reel2 << " - " << reel3 << std::endl;
 
+        if (reel1 == "Star" || reel2 == "Star" || reel3 == "Star") {
+            isBonusSpin = true;
+        }
+        
         if (reel1 == reel2 && reel2 == reel3) {
             std::cout << "Jackpot!" << std::endl;
             credits += bet * 3;
@@ -37,6 +46,10 @@ public:
         }
         else {
             std::cout << "Try again." << std::endl;
+        }
+        if (reel1 == "Star" || reel2 == "Star" || reel3 == "Star") {
+            isBonusSpin = true;
+            std::cout << "You've earned a bonus spin!" << std::endl;
         }
 
         std::cout << "Credits: " << credits << std::endl;
